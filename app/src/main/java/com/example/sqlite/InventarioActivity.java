@@ -25,8 +25,14 @@ import java.util.List;
 // Lista del inventario de la bodega con búsqueda y aviso de stock bajo
 public class InventarioActivity extends ProtegidaActivity {
 
+    public static final String EXTRA_MODO = "modo_stock"; // TODOS | NORMAL | BAJO
+    public static final String MODO_TODOS = "TODOS";
+    public static final String MODO_NORMAL = "NORMAL";
+    public static final String MODO_BAJO = "BAJO";
+
     private TextInputEditText txtBuscar;
     private ProductoAdapter adapter;
+    private String modo = MODO_TODOS;
     private final List<Producto> productos = new ArrayList<>();
 
     @Override
@@ -37,6 +43,13 @@ public class InventarioActivity extends ProtegidaActivity {
         txtBuscar = findViewById(R.id.txtBuscar);
         ListView lista = findViewById(R.id.lstProductos);
         MaterialButton btnNuevo = findViewById(R.id.btnNuevo);
+        MaterialButton btnPdf = findViewById(R.id.btnPdfInventario);
+        TextView titulo = findViewById(R.id.lblTituloInv);
+
+        modo = getIntent().getStringExtra(EXTRA_MODO);
+        if (!MODO_NORMAL.equals(modo) && !MODO_BAJO.equals(modo)) modo = MODO_TODOS;
+        titulo.setText(MODO_NORMAL.equals(modo) ? "Stock normal"
+                : MODO_BAJO.equals(modo) ? "Stock bajo" : "Inventario");
 
         adapter = new ProductoAdapter(this, productos);
         lista.setAdapter(adapter);
@@ -49,6 +62,10 @@ public class InventarioActivity extends ProtegidaActivity {
         });
 
         btnNuevo.setOnClickListener(v -> startActivity(new Intent(this, ProductoActivity.class)));
+
+        // Informe PDF acorde al filtro actual (inventario completo / stock normal / stock bajo)
+        btnPdf.setOnClickListener(v -> InformePdf.informeInventario(
+                this, new ArrayList<>(productos), modo, sesion.getNombre()));
 
         txtBuscar.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) { }
@@ -67,7 +84,7 @@ public class InventarioActivity extends ProtegidaActivity {
         DBHelper helper = new DBHelper(this);
         try {
             productos.clear();
-            productos.addAll(helper.listarProductos(txtBuscar.getText().toString()));
+            productos.addAll(helper.listarProductosStock(txtBuscar.getText().toString(), modo));
             adapter.notifyDataSetChanged();
         } catch (Exception e) {
             Toast.makeText(this, "Error al leer: " + e.getMessage(), Toast.LENGTH_SHORT).show();

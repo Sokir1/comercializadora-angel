@@ -29,6 +29,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity android:name=".MovimientosActivity" android:exported="false" />
+        <activity android:name=".HistorialMovimientosActivity" android:exported="false" />
         <activity android:name=".MenuActivity" android:exported="false" />
         <activity
             android:name=".InventarioActivity"

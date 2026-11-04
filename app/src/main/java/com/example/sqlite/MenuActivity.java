@@ -2,6 +2,7 @@ package com.example.sqlite;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
@@ -26,21 +27,44 @@ public class MenuActivity extends ProtegidaActivity {
         MaterialButton btnCategorias = findViewById(R.id.btnCategorias);
         MaterialButton btnProveedores = findViewById(R.id.btnProveedores);
         MaterialButton btnUsuarios = findViewById(R.id.btnUsuarios);
+        MaterialButton btnEntradas = findViewById(R.id.btnEntradas);
+        MaterialButton btnSalidas = findViewById(R.id.btnSalidas);
         MaterialButton btnSalir = findViewById(R.id.btnCerrarSesion);
+        View cardProductos = findViewById(R.id.cardProductos);
+        View cardStockBajo = findViewById(R.id.cardStockBajo);
 
         lblSaludo.setText("Hola, " + sesion.getNombre());
         lblRol.setText("Rol: " + sesion.getNombreRol());
 
         // Solo el ADMIN administra usuarios y roles
-        btnUsuarios.setVisibility(sesion.esAdmin() ? android.view.View.VISIBLE : android.view.View.GONE);
+        btnUsuarios.setVisibility(sesion.esAdmin() ? View.VISIBLE : View.GONE);
 
-        findViewById(R.id.btnMovimientos).setOnClickListener(v -> startActivity(new Intent(this, MovimientosActivity.class)));
-        btnInventario.setOnClickListener(v -> startActivity(new Intent(this, InventarioActivity.class)));
+        // Tarjetas de resumen: abren el listado filtrado por estado de stock
+        cardProductos.setOnClickListener(v -> abrirInventario(InventarioActivity.MODO_NORMAL));
+        cardStockBajo.setOnClickListener(v -> abrirInventario(InventarioActivity.MODO_BAJO));
+
+        // Entradas y salidas: pantallas de solo lectura con informe PDF propio
+        btnEntradas.setOnClickListener(v -> abrirHistorial("ENTRADA"));
+        btnSalidas.setOnClickListener(v -> abrirHistorial("SALIDA"));
+
+        btnInventario.setOnClickListener(v -> abrirInventario(InventarioActivity.MODO_TODOS));
         btnNuevo.setOnClickListener(v -> startActivity(new Intent(this, ProductoActivity.class)));
         btnCategorias.setOnClickListener(v -> startActivity(new Intent(this, CategoriasActivity.class)));
         btnProveedores.setOnClickListener(v -> startActivity(new Intent(this, ProveedoresActivity.class)));
         btnUsuarios.setOnClickListener(v -> startActivity(new Intent(this, UsuariosActivity.class)));
         btnSalir.setOnClickListener(v -> cerrarSesion());
+    }
+
+    private void abrirInventario(String modo) {
+        Intent i = new Intent(this, InventarioActivity.class);
+        i.putExtra(InventarioActivity.EXTRA_MODO, modo);
+        startActivity(i);
+    }
+
+    private void abrirHistorial(String tipo) {
+        Intent i = new Intent(this, HistorialMovimientosActivity.class);
+        i.putExtra(HistorialMovimientosActivity.EXTRA_TIPO, tipo);
+        startActivity(i);
     }
 
     @Override

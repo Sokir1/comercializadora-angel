@@ -570,4 +570,47 @@ public class DBHelper extends SQLiteOpenHelper {
         } return lista;
     }
 
+    // Productos activos filtrados por estado de stock: "TODOS", "NORMAL" o "BAJO".
+    // Mantiene el buscador por nombre o SKU.
+    public List<Producto> listarProductosStock(String filtro, String estado) {
+        List<Producto> lista = new ArrayList<>();
+        String like = "%" + (filtro == null ? "" : filtro.trim()) + "%";
+        String cond = "";
+        if ("NORMAL".equals(estado)) cond = " AND p.stock_actual > p.stock_minimo";
+        else if ("BAJO".equals(estado)) cond = " AND p.stock_actual <= p.stock_minimo";
+        try (Cursor c = getReadableDatabase().rawQuery(SELECT_PRODUCTO +
+                " WHERE p.activo=1 AND (p.nombre LIKE ? OR p.sku_codigo LIKE ?)" + cond + " ORDER BY p.nombre",
+                new String[]{like, like})) {
+            while (c.moveToNext()) lista.add(leerProducto(c));
+        }
+        return lista;
+    }
+
+    // Historial de movimientos filtrado por tipo (null = todos) con datos listos para informe.
+    public List<Movimiento> listarMovimientos(String tipo) {
+        List<Movimiento> lista = new ArrayList<>();
+        String sql = "SELECT m.fecha,p.sku_codigo,p.nombre,m.tipo,m.cantidad,u.username,m.motivo," +
+                "COALESCE(v.razon_social,'—') FROM MOVIMIENTO m " +
+                "JOIN PRODUCTO p ON p.id_producto=m.id_producto " +
+                "JOIN USUARIO u ON u.id_usuario=m.id_usuario " +
+                "LEFT JOIN PROVEEDOR v ON v.id_proveedor=m.id_proveedor " +
+                (tipo == null ? "" : "WHERE m.tipo = ? ") +
+                "ORDER BY m.id_movimiento DESC";
+        try (Cursor c = getReadableDatabase().rawQuery(sql, tipo == null ? null : new String[]{tipo})) {
+            while (c.moveToNext()) {
+                Movimiento m = new Movimiento();
+                m.fecha = c.getString(0);
+                m.sku = c.getString(1);
+                m.producto = c.getString(2);
+                m.tipo = c.getString(3);
+                m.cantidad = c.getLong(4) / 1000.0;
+                m.usuario = c.getString(5);
+                m.motivo = c.getString(6);
+                m.proveedor = c.getString(7);
+                lista.add(m);
+            }
+        }
+        return lista;
+    }
+
 }

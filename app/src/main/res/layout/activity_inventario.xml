@@ -26,6 +26,7 @@
             android:padding="16dp">
 
             <TextView
+                android:id="@+id/lblTituloInv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:letterSpacing="0.04"
@@ -73,6 +74,20 @@
         android:layout_height="48dp"
         android:layout_marginBottom="12dp"
         android:text="+ Agregar producto"
+        android:textColor="#2E1C15"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:backgroundTint="#D4B28C"
+        app:cornerRadius="12dp"
+        app:elevation="4dp" />
+
+    <!-- Botón Descargar Informe PDF -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPdfInventario"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="12dp"
+        android:text="Descargar informe PDF"
         android:textColor="#2E1C15"
         android:textSize="15sp"
         android:textStyle="bold"

@@ -57,15 +57,19 @@
             android:layout_marginBottom="24dp"
             android:orientation="horizontal">
 
-            <!-- Tarjeta Total Productos -->
+            <!-- Tarjeta Total Productos (botón: abre stock en estado normal) -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardProductos"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
                 app:cardBackgroundColor="#D92E1C15"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
+                app:rippleColor="#33D4B28C"
                 app:strokeColor="#D4B28C"
                 app:strokeWidth="1.5dp">
 
@@ -96,15 +100,19 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Tarjeta Stock Bajo -->
+            <!-- Tarjeta Stock Bajo (botón: abre stock bajo) -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardStockBajo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
                 app:cardBackgroundColor="#D92E1C15"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
+                app:rippleColor="#33FF8A80"
                 app:strokeColor="#FF8A80"
                 app:strokeWidth="1.5dp">
 
@@ -205,14 +213,49 @@
             app:strokeColor="#D4B28C"
             app:strokeWidth="1.5dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnMovimientos"
+        <!-- Sección Entradas y Salidas -->
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="12dp"
-            android:text="Entradas y salidas"
-            app:backgroundTint="#D4B28C"
-            android:textColor="#2E1C15" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="4dp"
+            android:text="Entradas y Salidas"
+            android:textColor="#D4B28C"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEntradas"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:text="Entradas"
+                android:textColor="#2E1C15"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:backgroundTint="#D4B28C"
+                app:cornerRadius="12dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSalidas"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:text="Salidas"
+                android:textColor="#2E1C15"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:backgroundTint="#D4B28C"
+                app:cornerRadius="12dp" />
+        </LinearLayout>
 
         <!-- Botón de Cerrar Sesión -->
         <com.google.android.material.button.MaterialButton
